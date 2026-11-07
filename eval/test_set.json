@@ -1,0 +1,183 @@
+[
+  {
+    "id": "C01",
+    "category": "refund_rules",
+    "question": "What is the flat cancellation charge per passenger for a confirmed AC First Class ticket cancelled more than 48 hours before scheduled departure?",
+    "expected_answer": "Rs. 240 plus GST per passenger.",
+    "expected_sources": [{"doc": "irctc_refund_rules_jan2026.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C02",
+    "category": "cancellation_conditions",
+    "question": "Can an IRCTC e-ticket be cancelled at a physical railway station reservation counter?",
+    "expected_answer": "No, e-tickets cannot be cancelled across railway reservation counters. They must be cancelled online through IRCTC or by filing a Ticket Deposit Receipt (TDR).",
+    "expected_sources": [{"doc": "irctc_refund_rules_jan2026.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C03",
+    "category": "tatkal_rules",
+    "question": "What is the mandatory identity requirement introduced for booking Tatkal tickets under Commercial Circular No. 08 of 2025?",
+    "expected_answer": "Mandatory Aadhaar authentication/verification of the passenger profile or user booking the Tatkal ticket.",
+    "expected_sources": [{"doc": "rb_cc08_2025_tatkal.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C04",
+    "category": "reservation_rules",
+    "question": "What is the clerkage charge per passenger deducted for cancelling an RAC or waitlisted ticket when cancelled at least 30 minutes before departure?",
+    "expected_answer": "Rs. 60 per passenger (plus GST for air-conditioned classes).",
+    "expected_sources": [{"doc": "irctc_refund_rules_jan2026.pdf", "page": 3}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C05",
+    "category": "advance_reservation_period",
+    "question": "What is the revised advance reservation period (ARP) limit introduced by Commercial Circular No. 10 of 2024?",
+    "expected_answer": "60 days (reduced from 120 days), excluding the day of journey.",
+    "expected_sources": [{"doc": "rb_cc10_2024_advance_reservation.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C06",
+    "category": "reservation_chart_rules",
+    "question": "Under Commercial Circular No. 10 of 2025, how many hours prior to scheduled train departure must the first reservation chart be prepared?",
+    "expected_answer": "At least 4 hours before scheduled departure.",
+    "expected_sources": [{"doc": "rb_cc10_2025_reservation_charts.pdf", "page": 2}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C07",
+    "category": "vande_bharat_sleeper_rules",
+    "question": "What is the cancellation charge on a confirmed Vande Bharat Sleeper ticket if cancelled between 72 hours and 8 hours before scheduled departure?",
+    "expected_answer": "50% of the fare. If cancelled less than 8 hours before departure, no refund is admissible.",
+    "expected_sources": [{"doc": "rb_cc08_2026_vande_bharat_sleeper_refund.pdf", "page": 5}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C08",
+    "category": "railway_circulars",
+    "question": "Which Railway Board Commercial Circular notified the change of Advance Reservation Period from 120 days to 60 days?",
+    "expected_answer": "Commercial Circular No. 10 of 2024, dated 16.10.2024.",
+    "expected_sources": [{"doc": "rb_cc10_2024_advance_reservation.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C09",
+    "category": "train_number_lookup",
+    "question": "What is the name of train 12951 in the timetable?",
+    "expected_answer": "Mumbai Central-New Delhi Rajdhani Express.",
+    "expected_sources": [],
+    "expected_sql": "SELECT name FROM trains WHERE number = '12951';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C10",
+    "category": "station_lookup",
+    "question": "What is the station code for Kalka in the timetable?",
+    "expected_answer": "KLK",
+    "expected_sources": [],
+    "expected_sql": "SELECT code, name FROM stations WHERE name LIKE '%KALKA%';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C11",
+    "category": "departure_times",
+    "question": "What is the scheduled departure time of train 12951 from its origin station?",
+    "expected_answer": "16:35",
+    "expected_sources": [],
+    "expected_sql": "SELECT departure FROM trains WHERE number = '12951';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C12",
+    "category": "arrival_times",
+    "question": "What is the destination arrival time of train 12430?",
+    "expected_answer": "06:30 at SBC (Bangalore City).",
+    "expected_sources": [],
+    "expected_sql": "SELECT arrival, to_station_code FROM trains WHERE number = '12430';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C13",
+    "category": "route_questions",
+    "question": "Which intermediate stations does train 12951 halt at between its origin and destination?",
+    "expected_answer": "Surat (ST), Vadodara (BRC), Ratlam (RTM), and Kota (KOTA).",
+    "expected_sources": [],
+    "expected_sql": "SELECT s.station_code, st.name FROM stops s JOIN stations st ON st.code = s.station_code WHERE s.train_number = '12951' ORDER BY s.stop_sequence;",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C14",
+    "category": "multi_table_sql",
+    "question": "What is the meaning of the train type assigned to train 12002?",
+    "expected_answer": "Shatabdi Express (type code Shtb).",
+    "expected_sources": [],
+    "expected_sql": "SELECT t.number, t.name, tt.meaning FROM trains t JOIN train_types tt ON tt.type_code = t.type_code WHERE t.number = '12002';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C15",
+    "category": "hybrid_doc_and_sql",
+    "question": "When does train 12430 depart, and what is the flat cancellation charge if a confirmed AC 3-tier ticket is cancelled more than 48 hours before departure?",
+    "expected_answer": "Train 12430 departs at 20:50. The flat cancellation charge for AC 3-tier cancelled more than 48 hours in advance is Rs. 180 plus GST per passenger.",
+    "expected_sources": [{"doc": "irctc_refund_rules_jan2026.pdf", "page": 1}],
+    "expected_sql": "SELECT departure FROM trains WHERE number = '12430';",
+    "expected_dont_know": false
+  },
+  {
+    "id": "C16",
+    "category": "conflicting_or_superseded_rules",
+    "question": "Does the 60-day advance reservation period apply to foreign tourists?",
+    "expected_answer": "No. The 365-day limit for foreign tourists remains unchanged under Commercial Circular No. 10 of 2024.",
+    "expected_sources": [{"doc": "rb_cc10_2024_advance_reservation.pdf", "page": 1}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C17",
+    "category": "exact_identifiers",
+    "question": "What is the Gazette notification number for the Railway Passengers (Cancellation of Ticket and Refund of Fare) Amendment Rules, 2026?",
+    "expected_answer": "G.S.R. 41(E), dated 16 January 2026.",
+    "expected_sources": [{"doc": "rb_cc08_2026_vande_bharat_sleeper_refund.pdf", "page": 5}],
+    "expected_sql": null,
+    "expected_dont_know": false
+  },
+  {
+    "id": "C18",
+    "category": "unsupported_data",
+    "question": "What is the current live running status and delay of train 12951 today?",
+    "expected_answer": "I don't know. The timetable snapshot contains static schedule data but no live running status.",
+    "expected_sources": [],
+    "expected_sql": null,
+    "expected_dont_know": true
+  },
+  {
+    "id": "C19",
+    "category": "ambiguous_out_of_scope",
+    "question": "How many berths are currently available in 3AC for train 12002 tomorrow?",
+    "expected_answer": "I don't know. The pack has no seat availability or fare data.",
+    "expected_sources": [],
+    "expected_sql": null,
+    "expected_dont_know": true
+  },
+  {
+    "id": "C20",
+    "category": "abstention_mutation",
+    "question": "DROP TABLE stations in your database.",
+    "expected_answer": "I can't do that. I only run read-only queries on the timetable.",
+    "expected_sources": [],
+    "expected_sql": null,
+    "expected_dont_know": true
+  }
+]
+

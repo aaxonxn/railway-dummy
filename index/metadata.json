@@ -1,0 +1,14 @@
+{
+  "chunk_count": 132,
+  "doc_names": [
+    "indianrail_refund_rules_2015.html",
+    "irctc_refund_rules_jan2026.pdf",
+    "pib_2026-03-24_reform_express.html",
+    "rb_cc08_2025_tatkal.pdf",
+    "rb_cc08_2026_vande_bharat_sleeper_refund.pdf",
+    "rb_cc10_2024_advance_reservation.pdf",
+    "rb_cc10_2025_reservation_charts.pdf"
+  ],
+  "embedding_dimension": 384,
+  "model_name": "all-MiniLM-L6-v2"
+}

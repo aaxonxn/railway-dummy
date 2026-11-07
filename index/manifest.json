@@ -1,0 +1,30 @@
+{
+  "indianrail_refund_rules_2015.html": {
+    "size": 6936,
+    "sha256": "de307a29b29d5a67265abd7fdc112d4e86a50db3f283e07904eb4783061f6746"
+  },
+  "irctc_refund_rules_jan2026.pdf": {
+    "size": 763187,
+    "sha256": "94c77cb372dd60544266830ff235b23abd0caff7b69e509eed1f8c9a14994f49"
+  },
+  "pib_2026-03-24_reform_express.html": {
+    "size": 180107,
+    "sha256": "356ced1dd2328c01e50188553361bd6162b054f3d6201d12ea84843e88a1d62f"
+  },
+  "rb_cc08_2025_tatkal.pdf": {
+    "size": 178645,
+    "sha256": "c42d3d0b87340a3492977102f62275af7037fa1a65c527235e56f3b9476a572d"
+  },
+  "rb_cc08_2026_vande_bharat_sleeper_refund.pdf": {
+    "size": 1552682,
+    "sha256": "3f1d639903ec9873ad3b1fa954d8c3259d268040bbb087a97ca408a3958dcfae"
+  },
+  "rb_cc10_2024_advance_reservation.pdf": {
+    "size": 63875,
+    "sha256": "596c19ba2f18774ea4ca2e409f1b15fba4471505e6ad7264fb941a6626293edf"
+  },
+  "rb_cc10_2025_reservation_charts.pdf": {
+    "size": 70183,
+    "sha256": "b9ea93994535603a67858402d2a05987502f94a36c24dfa5628c929f3fab5476"
+  }
+}
