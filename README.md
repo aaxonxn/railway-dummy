@@ -77,7 +77,7 @@ flowchart TD
 ## 4. Technology Stack
 
 - **Language & Runtime**: Python 3.12.9 (Windows / Linux compatible).
-- **LLM Integration**: Google GenAI SDK (`google-genai`), using `gemini-3-flash-preview` and `gemini-3.1-flash-lite`.
+- **LLM Integration**: Google GenAI SDK (`google-genai`), using `gemini-3.5-flash-lite` (with automatic failover to `gemini-3.5-flash`, `gemini-3.7-flash`).
 - **Vector Embeddings**: `sentence-transformers` (`all-MiniLM-L6-v2`, 384 dimensions).
 - **Dense Vector Index**: `faiss-cpu` (Inner Product on L2-normalized vectors for cosine similarity).
 - **Keyword Retrieval**: `rank-bm25` (`BM25Okapi`).
@@ -130,11 +130,11 @@ Railway/
 │   └── faiss.index                 # FAISS vector index
 │
 ├── eval/                           # Evaluation suite and experiment reports
-│   ├── test_set.json               # 20 comprehensive test questions
+│   ├── test_set.json               # 21 comprehensive test questions
 │   ├── evaluate.py                 # CLI evaluator script
 │   └── experiments.md              # Before-and-after experimental analysis
 │
-├── tests/                          # 43 Automated unit and integration tests
+├── tests/                          # 45 Automated unit and integration tests
 │   ├── test_ingestion.py
 │   ├── test_ocr.py
 │   ├── test_retrieval.py
@@ -198,7 +198,7 @@ Copy-Item .env.example .env
 Edit `.env`:
 ```env
 GEMINI_API_KEY=your_actual_gemini_api_key_here
-GEMINI_MODEL=gemini-3-flash-preview
+GEMINI_MODEL=gemini-3.5-flash-lite
 TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe
 ```
 
@@ -275,7 +275,7 @@ python run_questions.py rail_capstone_pack/questions/sample_questions.json eval/
 
 ## 8. Evaluation Framework & Benchmark Results
 
-The evaluation suite (`eval/evaluate.py`) tests the system against `eval/test_set.json` (20 questions covering refund rules, cancellation conditions, Tatkal requirements, advance reservations, reservation charts, Vande Bharat Sleeper circulars, SQL lookups, routes, hybrid queries, and abstention).
+The evaluation suite (`eval/evaluate.py`) tests the system against `eval/test_set.json` (21 questions covering refund rules, cancellation conditions, Tatkal requirements, advance reservations, reservation charts, Vande Bharat Sleeper circulars, SQL lookups, routes, hybrid queries, and abstention).
 
 Run evaluation:
 ```powershell
@@ -301,7 +301,7 @@ python eval/evaluate.py
 
 ## 9. Automated Testing
 
-Run the complete 43-test test suite using `pytest`:
+Run the complete 45-test test suite using `pytest`:
 ```powershell
 pytest -v
 ```

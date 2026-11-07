@@ -42,7 +42,8 @@ RULES:
    WHERE a.station_code = 'JP' AND b.station_code = 'UDZ'
    ORDER BY a.departure;
 5. For station names, use UPPER() and LIKE: e.g. UPPER(name) LIKE '%DELHI%'.
-6. If the question cannot be answered from the database schema (e.g. fares, seat availability, PNR, live status), output: NONE.
+6. If the question is a compound or hybrid question asking both about timetable facts (such as departure time, arrival time, train name, or stations) and policy/cancellation rules (which are in documents, not the database), generate the SQL query for the timetable/schedule portion.
+7. Only if NO part of the question can be answered from the database schema (e.g. pure fare calculation, seat availability, PNR, live running status, or pure policy questions without timetable elements), output: NONE.
 """
 
 
@@ -103,9 +104,10 @@ If the excerpts do not contain the answer, say "I could not find sufficient info
 
         return answer, sources, dont_know
 
-    def generate_sql_query(self, question: str) -> Optional[str]:
-        """Generate SQL query string using Gemini."""
-        prompt = f"Passenger Question: {question}\nGenerate SQL:"
+    def generate_sql_query(self, question: str, prompt_prefix: Optional[str] = None) -> Optional[str]:
+        """Generate SQL query string using Gemini, with resilient fallback for train schedule lookups."""
+        prefix = prompt_prefix or "Passenger Question:"
+        prompt = f"{prefix} {question}\nGenerate SQL:"
         try:
             sql_resp = self.llm.generate(prompt=prompt, system_instruction=SQL_SYSTEM_PROMPT)
             cleaned = sql_resp.strip()
@@ -114,12 +116,23 @@ If the excerpts do not contain the answer, say "I could not find sufficient info
             cleaned = re.sub(r"\s*```$", "", cleaned)
             cleaned = cleaned.strip()
 
-            if cleaned.upper() == "NONE" or not cleaned:
-                return None
-            return cleaned
+            if cleaned and cleaned.upper() != "NONE":
+                return cleaned
         except Exception as e:
             logger.error("Failed to generate SQL with LLM: %s", e)
-            return None
+
+        # Fallback heuristic for common train departure/arrival/name questions
+        train_match = re.search(r"\b(\d{5})\b", question)
+        if train_match:
+            t_num = train_match.group(1)
+            q_low = question.lower()
+            if "depart" in q_low or "leave" in q_low:
+                return f"SELECT departure FROM trains WHERE number = '{t_num}';"
+            elif "arrive" in q_low or "arrival" in q_low:
+                return f"SELECT arrival FROM trains WHERE number = '{t_num}';"
+            elif "name" in q_low or "called" in q_low:
+                return f"SELECT name FROM trains WHERE number = '{t_num}';"
+        return None
 
     def generate_sql_answer(self, question: str, sql_query: Optional[str] = None) -> Tuple[str, Optional[str], bool]:
         """
@@ -161,7 +174,10 @@ Summarize this into a clear, direct, passenger-friendly answer. Mention train nu
         Returns (answer_text, sources, sql, dont_know).
         """
         # 1. Execute SQL
-        query = sql_query or self.generate_sql_query(question)
+        query = sql_query or self.generate_sql_query(
+            question,
+            prompt_prefix="Passenger Question (extract and generate SQL for the timetable/train/schedule portion):",
+        )
         sql_results_text = "No database query executed."
         executed_sql = None
         if query:

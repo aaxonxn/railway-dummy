@@ -46,3 +46,39 @@ def test_pipeline_sources_validation():
         for source in res["sources"]:
             assert validate_citation(source) is True
 
+
+def test_pipeline_route_jaipur_to_udaipur():
+    """Verify end-to-end route search from Jaipur (JP) to Udaipur City (UDZ)."""
+    res = ask("Find trains from Jaipur (JP) to Udaipur City (UDZ).")
+    assert res["dont_know"] is False
+    assert res["sql"] is not None
+    assert "stops" in res["sql"].lower()
+    assert res["sources"] == []
+
+    ans = res["answer"]
+    # Check train numbers
+    assert "12315" in ans or "Ananya" in ans
+    assert "12965" in ans or "Gwalior Udaipur" in ans
+    # Check departure and arrival times from timetable
+    assert "17:20" in ans
+    assert "22:30" in ans
+
+
+def test_pipeline_hybrid_c15_regression():
+    """Regression test for compound question C15 requiring both SQL and document RAG."""
+    q = "When does train 12430 depart, and what is the flat cancellation charge if a confirmed AC 3-tier ticket is cancelled more than 48 hours before departure?"
+    res = ask(q)
+    assert res["dont_know"] is False
+    assert res["sql"] is not None
+    assert "12430" in res["sql"]
+    assert res["sources"] != []
+
+    # Verify cited document includes IRCTC refund rules
+    doc_names = {s["doc"] for s in res["sources"]}
+    assert "irctc_refund_rules_jan2026.pdf" in doc_names
+
+    # Verify both timetable fact (20:50) and refund fact (180) are in the answer
+    ans = res["answer"]
+    assert "20:50" in ans
+    assert "180" in ans
+

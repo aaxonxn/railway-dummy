@@ -178,6 +178,15 @@
     "expected_sources": [],
     "expected_sql": null,
     "expected_dont_know": true
+  },
+  {
+    "id": "C21",
+    "category": "route_questions",
+    "question": "Find trains from Jaipur (JP) to Udaipur City (UDZ).",
+    "expected_answer": "Trains operating from Jaipur (JP) to Udaipur City (UDZ) are train 12315 (Ananya Express, departs 17:20, arrives 03:00) and train 12965 (Gwalior Udaipur Express, departs 22:30, arrives 06:10).",
+    "expected_sources": [],
+    "expected_sql": "SELECT t.number, t.name, a.departure, b.arrival FROM stops a JOIN stops b ON b.train_number = a.train_number AND b.stop_sequence > a.stop_sequence JOIN trains t ON t.number = a.train_number WHERE a.station_code = 'JP' AND b.station_code = 'UDZ' ORDER BY a.departure;",
+    "expected_dont_know": false
   }
 ]
 
