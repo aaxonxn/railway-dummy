@@ -35,7 +35,7 @@ class Config:
         default_factory=lambda: os.getenv("GEMINI_API_KEY")
     )
     gemini_model: str = field(
-        default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
+        default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
     )
     gemini_timeout_sec: float = 30.0
     gemini_max_retries: int = 3

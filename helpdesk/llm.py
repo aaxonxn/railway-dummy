@@ -32,7 +32,13 @@ class LLMClient:
 
     def __init__(self, model_name: Optional[str] = None):
         self.model_name = model_name or config.gemini_model
-        self.fallback_models = ["gemini-3-flash-preview", "gemini-3.1-flash-lite"]
+        self.fallback_models = [
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-3.7-flash",
+            "gemini-3-flash-preview",
+            "gemini-3.1-flash-lite",
+        ]
 
     def generate(self, prompt: str, system_instruction: Optional[str] = None, max_retries: int = 3) -> str:
         """Generate content from Gemini with error handling and retry logic."""
@@ -67,10 +73,12 @@ class LLMClient:
                     err_str = str(e)
                     logger.warning("Gemini call failed with model %s (attempt %d/%d): %s", current_model, attempt + 1, max_retries, err_str)
                     if "404" in err_str or "not available" in err_str.lower():
-                        # Model unavailable, break retry loop to try fallback model
                         break
                     if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
-                        logger.warning("Rate limit hit on %s; immediately switching to fallback model...", current_model)
+                        logger.warning("Rate limit on %s; trying next model...", current_model)
+                        break
+                    if "503" in err_str or "UNAVAILABLE" in err_str:
+                        logger.warning("Model %s temporarily unavailable (503); trying next model...", current_model)
                         break
                     time.sleep(1.0 * (attempt + 1))
 
